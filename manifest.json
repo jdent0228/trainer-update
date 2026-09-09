@@ -1,5 +1,5 @@
 {
- "version": "0.1.10",
+ "version": "0.1.11",
  "files": {
   "paths.py": {
    "sha256": "acf97cae72d5e686cea47563f9e971b6cd3bc9e775ef594d952a67a153799430",
@@ -10,12 +10,12 @@
    "size": 128760
   },
   "web_server.py": {
-   "sha256": "0a0401947af1af3dbf900558c53c3923fc31dd92599760e40a36a44305a1cdae",
-   "size": 130812
+   "sha256": "67247812b467157ad6ddf68300b3044eac87ce1b28d613b10d7d6a9ffcb76300",
+   "size": 134221
   },
   "updater.py": {
-   "sha256": "b4027face17af27207fda83c2bdc576839809e538ab498a84ea9f585022a8fb2",
-   "size": 6531
+   "sha256": "22c0f977cb4e7d72cc4668b1bb68c09028932f811a8614420dbb64478301ea24",
+   "size": 6862
   },
   "sitecustomize.py": {
    "sha256": "34ca67cfb93fafd75da476c7266222d53a731ebbb0dd9dd4a4acbfea561dfc0b",
@@ -26,24 +26,28 @@
    "size": 3742
   },
   "VERSION": {
-   "sha256": "8a448394dabf3721284d94fa1e70d8e44cae3c6ea6ea83574c342b3a82131f07",
+   "sha256": "afe8ea1f39bac3f44982642819355739df5438907aaad55617fb4f981491c62f",
    "size": 6
   },
   "static/index.html": {
    "sha256": "4a977f491f695d43fde51a166e1425c7564f9982228847fae4ce48a1952bdd2d",
    "size": 5120
   },
+  "static/pay-demo.html": {
+   "sha256": "b71877feffb06b4452ba3daf525e1a6f9839eff13003f7d8dda5d6cc199e9c29",
+   "size": 3572
+  },
   "static/korail.js": {
-   "sha256": "87bca4662ef512a159b35380856951541713c7f7272ca5783210525910da07fc",
-   "size": 270808
+   "sha256": "2c2b42f8b8b58215aabcf0150cb5734abef5abf00a76cfa1ec75071d4c4c0c8e",
+   "size": 272571
   },
   "static/flow.html": {
    "sha256": "598f5a5dcb9fea0df7bbcd080d4f41d05b46e8614281d3a5b8e88dd0ff0d8f3b",
    "size": 12794
   },
   "static/style.css": {
-   "sha256": "4613bb9dcb415879b40d1fc73d4a93e6fe452c1566e0c751a99789f6f1c97a68",
-   "size": 103573
+   "sha256": "2f6a0814878c4f504cecfc502e348367d92a2b042577e81e3c9e1eb84ae125ab",
+   "size": 103995
   }
  }
 }

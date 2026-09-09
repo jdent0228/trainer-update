@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>결제 정보 화면 상태</title>
+<link rel="stylesheet" href="/style.css">
+<style>
+  html,body{height:auto} body{background:var(--bg);padding:16px;font-family:var(--font-sf)}
+  .wrap{max-width:440px;margin:0 auto 26px;background:var(--card);border-radius:var(--radius-card);
+        box-shadow:var(--shadow-card);padding:16px 0 18px}
+  h3{font-size:14px;font-weight:800;color:#4E5968;max-width:440px;margin:0 auto 8px;padding-left:4px}
+  .seg-tight{width:240px}
+</style></head><body>
+<div id="root"></div>
+<script>
+const div=(c)=>{const e=document.createElement('div');if(c)e.className=c;return e;};
+const txt=(t,c,s)=>{const e=document.createElement(t);if(c)e.className=c;e.textContent=s;return e;};
+const NOTE_CASH='계좌 1회 등록으로 현금 결제를 할 수 있는 서비스입니다<br>'
+ +'<a href="https://www.korail.com" target="_blank" rel="noopener">코레일 사이트</a>'
+ +' - 마이페이지 - 결제관리 - 간편현금결제 설정에서 등록하세요';
+const TOSS_OK='토스페이가 등록되어있습니다';
+const TOSS_NONE='최초 1회 등록이 필요합니다.<br>코레일 어플에서 승차권 결제 - 간편결제 - 토스페이로 1회 결제 해주세요';
+
+const CASES=[
+ ['토스페이 — 등록됨',        'toss','note-line',TOSS_OK,        false],
+ ['토스페이 — 등록 안 됨',    'toss','warn-line',TOSS_NONE,      false],
+ ['토스페이 — 확인 실패',     'toss','note-line muted','토스페이 등록 여부를 확인하지 못했습니다', false],
+ ['간편현금 — PIN 미입력',    'cash','note-line muted',NOTE_CASH, true],
+ ['간편현금 — PIN 저장됨(안내 숨김)','cash',null,null,           true],
+ ['신용카드 — 안내 없음',     'card',null,null,                  false],
+];
+const root=document.getElementById('root');
+CASES.forEach(([title,method,cls,html,showPin])=>{
+  root.appendChild(txt('h3','',title));
+  const w=div('wrap');
+  // 결제 수단 카드
+  const card=div('card card-grid'); card.style.margin='0 14px';
+  const cell=div('grid-cell-full'); cell.appendChild(txt('div','grid-cell-label','결제 수단'));
+  const act=div('grid-cell-action');
+  const seg=div('segmented seg-tight');
+  [['toss','토스페이'],['card','신용카드'],['cash','간편현금']].forEach(([v,l],i)=>{
+    if(i) seg.appendChild(div('segmented-sep'));
+    const it=div('segmented-item'); const b=document.createElement('button');
+    b.className='segmented-btn'+(v===method?' active':''); b.type='button'; b.textContent=l;
+    it.appendChild(b); seg.appendChild(it);
+  });
+  act.appendChild(seg); cell.appendChild(act); card.appendChild(cell); w.appendChild(card);
+  // 안내 문구
+  if(cls){ const n=div('pay-note '+cls); n.innerHTML=html; w.appendChild(n); }
+  else if(method==='cash'){ const sp=div(''); sp.style.height='10px'; w.appendChild(sp); }
+  // PIN
+  if(showPin){
+    const pc=div('card card-grid'); pc.style.margin='0 14px';
+    const r=div('grid-cell-full'); r.appendChild(txt('div','grid-cell-label','간편결제 PIN'));
+    const a2=div('grid-cell-action'); const inp=document.createElement('input');
+    inp.className='field-input'; inp.type='password'; inp.placeholder='숫자 6자리';
+    inp.value = cls ? '' : '••••••'; inp.style.textAlign='right'; inp.style.width='110px';
+    a2.appendChild(inp); r.appendChild(a2); pc.appendChild(r); w.appendChild(pc);
+  }
+  root.appendChild(w);
+});
+</script></body></html>
