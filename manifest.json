@@ -1,5 +1,5 @@
 {
- "version": "0.1.9",
+ "version": "0.1.10",
  "files": {
   "paths.py": {
    "sha256": "acf97cae72d5e686cea47563f9e971b6cd3bc9e775ef594d952a67a153799430",
@@ -22,12 +22,12 @@
    "size": 1044
   },
   "app_main.py": {
-   "sha256": "251f1042fe22aae669759081243e00d922b622caa182bc1543da28b1ed6194ab",
-   "size": 3741
+   "sha256": "307024af14290f43b3ed55da4202b5d14c53854ce3923ced4904aad65e42f77a",
+   "size": 3742
   },
   "VERSION": {
-   "sha256": "51236fb3aface1b9e89f5494ec73f719902988a6a86c8f2bdcbd318757aa8200",
-   "size": 5
+   "sha256": "8a448394dabf3721284d94fa1e70d8e44cae3c6ea6ea83574c342b3a82131f07",
+   "size": 6
   },
   "static/index.html": {
    "sha256": "4a977f491f695d43fde51a166e1425c7564f9982228847fae4ce48a1952bdd2d",
