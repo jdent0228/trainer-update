@@ -55,8 +55,11 @@ def current_version() -> str:
     return "0.0.0"
 
 
-def _fetch(url: str, timeout: int = 20) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": "Trainer-Updater"})
+def _fetch(url: str, timeout: int = 20, bust: bool = False) -> bytes:
+    # raw.githubusercontent 는 쿼리스트링을 무시하고 5분쯤 캐시한다(실측). 새 릴리스 직후
+    # 최대 5분은 옛 매니페스트가 보일 수 있다 — 6시간마다 확인하므로 실질 영향은 없다.
+    req = urllib.request.Request(url, headers={"User-Agent": "Trainer-Updater",
+                                               "Cache-Control": "no-cache", "Pragma": "no-cache"})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return r.read()
 
@@ -91,7 +94,7 @@ def check_and_download() -> dict:
     try:
         STATE["error"] = ""
         STATE["current"] = current_version()
-        mf = json.loads(_fetch(f"{FEED}/manifest.json").decode("utf-8"))
+        mf = json.loads(_fetch(f"{FEED}/manifest.json", bust=True).decode("utf-8"))
         latest = str(mf.get("version") or "")
         STATE["latest"] = latest
         STATE["needs_exe"] = bool(mf.get("needs_exe"))
