@@ -1,5 +1,5 @@
 {
- "version": "0.1.13",
+ "version": "0.1.14",
  "files": {
   "paths.py": {
    "sha256": "acf97cae72d5e686cea47563f9e971b6cd3bc9e775ef594d952a67a153799430",
@@ -10,12 +10,12 @@
    "size": 406153
   },
   "korail.py": {
-   "sha256": "f161961fae7e88818fdb3532e714559b5e21438d59cfe9d1bf4fbee664b131ae",
-   "size": 137649
+   "sha256": "715d6b5bc9c242e958e4d2f93c85e4d5aac4a7cbeb652161418d141389733c6c",
+   "size": 149326
   },
   "web_server.py": {
-   "sha256": "5f82e9351853751d4afa303e81337d1505e5669c41b1e16aa6cb581edfef684c",
-   "size": 135157
+   "sha256": "cd656ce64ef46a9871e920acae6dcb076f1800f19e99c618e86c07156defe63b",
+   "size": 141012
   },
   "updater.py": {
    "sha256": "22c0f977cb4e7d72cc4668b1bb68c09028932f811a8614420dbb64478301ea24",
@@ -26,15 +26,15 @@
    "size": 1044
   },
   "seat_groups.json": {
-   "sha256": "97025846e200c520b21506ec7d9eca0e4e377cf334c05ebdb01d491700151d10",
-   "size": 11338
+   "sha256": "f91bb0e79c26354bad2c13b8393e8c4ea4356d58db1f72515ddf69576e6b5fc3",
+   "size": 11390
   },
   "app_main.py": {
    "sha256": "307024af14290f43b3ed55da4202b5d14c53854ce3923ced4904aad65e42f77a",
    "size": 3742
   },
   "VERSION": {
-   "sha256": "ee51afda5e1e26e66d79a54b2149e56f0a22e16e35130674d513d10a3b9d9422",
+   "sha256": "20c0f5f755258a418b37dafd8218870a477f924e8d7798066abb9e7868302fed",
    "size": 6
   },
   "static/index.html": {
@@ -46,20 +46,24 @@
    "size": 3433
   },
   "static/korail.js": {
-   "sha256": "34e6963fe1ff3220915d332d3798be683ba005121574d34e4f0e5ee129ef0844",
-   "size": 283484
+   "sha256": "237c68341ea47685a73480d8e8a36323459c660fb827e83a4b51d402453b5c3e",
+   "size": 314849
   },
   "static/flow.html": {
    "sha256": "598f5a5dcb9fea0df7bbcd080d4f41d05b46e8614281d3a5b8e88dd0ff0d8f3b",
    "size": 12794
   },
   "static/style.css": {
-   "sha256": "47fc8b321033d8b3f82b55cf30d4c54f970355b9bd7f16f754de091bbce87196",
-   "size": 112442
+   "sha256": "3cc8fefd1529e7137b14c7a1eac004654bad6340f3d52d62d6cab81530a3b2a3",
+   "size": 123091
   },
   "static/upd-demo.html": {
    "sha256": "f07fe0118130a74f56e82879bbda2fcaffbd222176f9687f8ff3d922e4f5ef4f",
    "size": 2702
+  },
+  "static/api-flow.html": {
+   "sha256": "2425871df96688b5df8aa66778a7e3c4e8b4c5ad2d0ad3f087b41cf3d463eaa7",
+   "size": 38888
   }
  }
 }
