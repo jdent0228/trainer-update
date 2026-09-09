@@ -1,0 +1,909 @@
+{
+ "version": 3,
+ "surveyed": "20260919",
+ "groups": [
+  {
+   "id": "KTX|1-18|down|A",
+   "train_type": "KTX",
+   "band": "1-18",
+   "updown": "down",
+   "form": "A",
+   "name": "KTX A",
+   "seats": 960,
+   "cars_label": "1~18호차",
+   "cars": [
+    {
+     "car_no": "01",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "02",
+     "cls": "2",
+     "seats": 27
+    },
+    {
+     "car_no": "03",
+     "cls": "2",
+     "seats": 36
+    },
+    {
+     "car_no": "04",
+     "cls": "2",
+     "seats": 33
+    },
+    {
+     "car_no": "05",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "06",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "07",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "08",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "09",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "10",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "11",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "12",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "13",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "14",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "15",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "16",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "17",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "18",
+     "cls": "1",
+     "seats": 56
+    }
+   ],
+   "trains": [
+    "405",
+    "407",
+    "413",
+    "417",
+    "421",
+    "425",
+    "427",
+    "435",
+    "441",
+    "465",
+    "473",
+    "625",
+    "635",
+    "651"
+   ]
+  },
+  {
+   "id": "KTX|1-18|up|A",
+   "train_type": "KTX",
+   "band": "1-18",
+   "updown": "up",
+   "form": "A",
+   "name": "KTX A",
+   "seats": 960,
+   "cars_label": "1~18호차",
+   "cars": [
+    {
+     "car_no": "01",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "02",
+     "cls": "2",
+     "seats": 27
+    },
+    {
+     "car_no": "03",
+     "cls": "2",
+     "seats": 36
+    },
+    {
+     "car_no": "04",
+     "cls": "2",
+     "seats": 33
+    },
+    {
+     "car_no": "05",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "06",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "07",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "08",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "09",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "10",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "11",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "12",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "13",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "14",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "15",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "16",
+     "cls": "1",
+     "seats": 60
+    },
+    {
+     "car_no": "17",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "18",
+     "cls": "1",
+     "seats": 56
+    }
+   ],
+   "trains": [
+    "406",
+    "412",
+    "414",
+    "418",
+    "422",
+    "430",
+    "434",
+    "436",
+    "440",
+    "444",
+    "464",
+    "472",
+    "630",
+    "654"
+   ]
+  },
+  {
+   "id": "KTX-산천|1-8|down|A",
+   "train_type": "KTX-산천",
+   "band": "1-8",
+   "updown": "down",
+   "form": "A",
+   "name": "KTX-산천 A",
+   "seats": 413,
+   "cars_label": "1~8호차",
+   "cars": [
+    {
+     "car_no": "01",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "02",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "03",
+     "cls": "2",
+     "seats": 33
+    },
+    {
+     "car_no": "04",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "05",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "06",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "07",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "08",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "443",
+    "471",
+    "603",
+    "609",
+    "619",
+    "629",
+    "631"
+   ]
+  },
+  {
+   "id": "KTX-산천|1-8|up|A",
+   "train_type": "KTX-산천",
+   "band": "1-8",
+   "updown": "up",
+   "form": "A",
+   "name": "KTX-산천 A",
+   "seats": 413,
+   "cars_label": "1~8호차",
+   "cars": [
+    {
+     "car_no": "01",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "02",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "03",
+     "cls": "2",
+     "seats": 33
+    },
+    {
+     "car_no": "04",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "05",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "06",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "07",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "08",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "442",
+    "458",
+    "466",
+    "604",
+    "606",
+    "608",
+    "614",
+    "616",
+    "622",
+    "624",
+    "626",
+    "634",
+    "636",
+    "642",
+    "652"
+   ]
+  },
+  {
+   "id": "KTX-산천|1-8|down|B",
+   "train_type": "KTX-산천",
+   "band": "1-8",
+   "updown": "down",
+   "form": "B",
+   "name": "KTX-산천 B",
+   "seats": 382,
+   "cars_label": "1~8호차",
+   "cars": [
+    {
+     "car_no": "01",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "02",
+     "cls": "1",
+     "seats": 52
+    },
+    {
+     "car_no": "03",
+     "cls": "2",
+     "seats": 30
+    },
+    {
+     "car_no": "04",
+     "cls": "1",
+     "seats": 44
+    },
+    {
+     "car_no": "05",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "06",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "07",
+     "cls": "1",
+     "seats": 52
+    },
+    {
+     "car_no": "08",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "601",
+    "607",
+    "613",
+    "623",
+    "641",
+    "653"
+   ]
+  },
+  {
+   "id": "KTX-산천|1-8|up|B",
+   "train_type": "KTX-산천",
+   "band": "1-8",
+   "updown": "up",
+   "form": "B",
+   "name": "KTX-산천 B",
+   "seats": 382,
+   "cars_label": "1~8호차",
+   "cars": [
+    {
+     "car_no": "01",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "02",
+     "cls": "1",
+     "seats": 52
+    },
+    {
+     "car_no": "03",
+     "cls": "2",
+     "seats": 30
+    },
+    {
+     "car_no": "04",
+     "cls": "1",
+     "seats": 44
+    },
+    {
+     "car_no": "05",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "06",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "07",
+     "cls": "1",
+     "seats": 52
+    },
+    {
+     "car_no": "08",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "404",
+    "408",
+    "416",
+    "424",
+    "426",
+    "474",
+    "602",
+    "610",
+    "612",
+    "618",
+    "628",
+    "632"
+   ]
+  },
+  {
+   "id": "KTX-산천|11-18|down|C",
+   "train_type": "KTX-산천",
+   "band": "11-18",
+   "updown": "down",
+   "form": "C",
+   "name": "KTX-산천 C",
+   "seats": 413,
+   "cars_label": "11~18호차",
+   "cars": [
+    {
+     "car_no": "11",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "12",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "13",
+     "cls": "2",
+     "seats": 33
+    },
+    {
+     "car_no": "14",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "15",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "16",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "17",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "18",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "423",
+    "433",
+    "453",
+    "457",
+    "461",
+    "463",
+    "605",
+    "617",
+    "627",
+    "9619"
+   ]
+  },
+  {
+   "id": "KTX-산천|11-18|up|C",
+   "train_type": "KTX-산천",
+   "band": "11-18",
+   "updown": "up",
+   "form": "C",
+   "name": "KTX-산천 C",
+   "seats": 413,
+   "cars_label": "11~18호차",
+   "cars": [
+    {
+     "car_no": "11",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "12",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "13",
+     "cls": "2",
+     "seats": 33
+    },
+    {
+     "car_no": "14",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "15",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "16",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "17",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "18",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "452",
+    "9622"
+   ]
+  },
+  {
+   "id": "KTX-산천|1-8|down|D",
+   "train_type": "KTX-산천",
+   "band": "1-8",
+   "updown": "down",
+   "form": "D",
+   "name": "KTX-산천 D",
+   "seats": 413,
+   "cars_label": "1~8호차",
+   "cars": [
+    {
+     "car_no": "01",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "02",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "03",
+     "cls": "2",
+     "seats": 33
+    },
+    {
+     "car_no": "04",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "05",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "06",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "07",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "08",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "415",
+    "437",
+    "615",
+    "9461"
+   ]
+  },
+  {
+   "id": "KTX-산천|1-8|up|D",
+   "train_type": "KTX-산천",
+   "band": "1-8",
+   "updown": "up",
+   "form": "D",
+   "name": "KTX-산천 D",
+   "seats": 413,
+   "cars_label": "1~8호차",
+   "cars": [
+    {
+     "car_no": "01",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "02",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "03",
+     "cls": "2",
+     "seats": 33
+    },
+    {
+     "car_no": "04",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "05",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "06",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "07",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "08",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "402",
+    "410",
+    "420",
+    "438",
+    "456",
+    "492",
+    "9452"
+   ]
+  },
+  {
+   "id": "KTX-산천|11-18|down|E",
+   "train_type": "KTX-산천",
+   "band": "11-18",
+   "updown": "down",
+   "form": "E",
+   "name": "KTX-산천 E",
+   "seats": 382,
+   "cars_label": "11~18호차",
+   "cars": [
+    {
+     "car_no": "11",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "12",
+     "cls": "1",
+     "seats": 52
+    },
+    {
+     "car_no": "13",
+     "cls": "2",
+     "seats": 30
+    },
+    {
+     "car_no": "14",
+     "cls": "1",
+     "seats": 44
+    },
+    {
+     "car_no": "15",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "16",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "17",
+     "cls": "1",
+     "seats": 52
+    },
+    {
+     "car_no": "18",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "401",
+    "409",
+    "439",
+    "455",
+    "611",
+    "633"
+   ]
+  },
+  {
+   "id": "KTX-산천|11-18|up|E",
+   "train_type": "KTX-산천",
+   "band": "11-18",
+   "updown": "up",
+   "form": "E",
+   "name": "KTX-산천 E",
+   "seats": 382,
+   "cars_label": "11~18호차",
+   "cars": [
+    {
+     "car_no": "11",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "12",
+     "cls": "1",
+     "seats": 52
+    },
+    {
+     "car_no": "13",
+     "cls": "2",
+     "seats": 30
+    },
+    {
+     "car_no": "14",
+     "cls": "1",
+     "seats": 44
+    },
+    {
+     "car_no": "15",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "16",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "17",
+     "cls": "1",
+     "seats": 52
+    },
+    {
+     "car_no": "18",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "9604"
+   ]
+  },
+  {
+   "id": "KTX-산천|11-18|down|F",
+   "train_type": "KTX-산천",
+   "band": "11-18",
+   "updown": "down",
+   "form": "F",
+   "name": "KTX-산천 F",
+   "seats": 413,
+   "cars_label": "11~18호차",
+   "cars": [
+    {
+     "car_no": "11",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "12",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "13",
+     "cls": "2",
+     "seats": 33
+    },
+    {
+     "car_no": "14",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "15",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "16",
+     "cls": "1",
+     "seats": 48
+    },
+    {
+     "car_no": "17",
+     "cls": "1",
+     "seats": 56
+    },
+    {
+     "car_no": "18",
+     "cls": "1",
+     "seats": 60
+    }
+   ],
+   "trains": [
+    "403",
+    "411",
+    "431"
+   ]
+  }
+ ]
+}
