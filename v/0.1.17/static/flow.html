@@ -1,0 +1,149 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>예매 흐름 — autorezv</title>
+<style>
+:root{--blue:#3182F6;--green:#0CA678;--orange:#F76707;--gray:#8B95A1;--line:#E5E8EC;--bg:#F2F4F6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#191F28;font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif;-webkit-text-size-adjust:100%}
+.top{position:sticky;top:0;z-index:10;background:#fff;padding:14px 16px;box-shadow:0 1px 0 rgba(0,0,0,.06);display:flex;justify-content:space-between;align-items:center}
+.top b{font-size:17px}.top a{color:var(--blue);text-decoration:none;font-size:14px;font-weight:700}
+.wrap{padding:16px 14px 60px;max-width:560px;margin:0 auto}
+h2{font-size:14px;color:#4E5968;margin:26px 0 10px;letter-spacing:-.2px}
+.legend{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tag{font-size:11px;font-weight:800;padding:4px 8px;border-radius:8px;white-space:nowrap}
+.t-srv{background:rgba(49,130,246,.12);color:#1B64DA}
+.t-app{background:rgba(12,166,120,.14);color:#0B7A57}
+.t-web{background:rgba(247,103,7,.13);color:#C2410C}
+.t-none{background:#EDF0F3;color:#6B7684}
+.step{background:#fff;border-radius:16px;padding:14px 15px;box-shadow:0 1px 3px rgba(0,0,0,.06);position:relative}
+.step+.arrow{height:22px;display:flex;justify-content:center;align-items:center;color:#C6CDD5;font-size:15px}
+.hd{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.no{flex:none;width:23px;height:23px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.ttl{font-size:15px;font-weight:800;flex:1}
+.row{display:flex;gap:8px;font-size:12.5px;line-height:1.6;padding:3px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:none}
+.k{flex:none;width:56px;color:var(--gray);font-weight:700}
+.v{flex:1;color:#333D4B;word-break:break-all}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#F4F6F8;padding:1px 5px;border-radius:5px}
+.fp{margin-top:9px;padding:9px 10px;border-radius:10px;font-size:11.5px;line-height:1.6}
+.fp.app{background:rgba(12,166,120,.08);border-left:3px solid var(--green)}
+.fp.web{background:rgba(247,103,7,.08);border-left:3px solid var(--orange)}
+.fp.srv{background:rgba(49,130,246,.07);border-left:3px solid var(--blue)}
+.fp.none{background:#F4F6F8;border-left:3px solid #C6CDD5;color:#6B7684}
+.fp b{display:block;margin-bottom:2px;font-size:11px;letter-spacing:.3px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);font-size:12px}
+th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#F8F9FB;font-weight:800;color:#4E5968;font-size:11.5px}
+tr:last-child td{border-bottom:none}
+.warn{background:#FFF7ED;border:1px solid #FED7AA;border-radius:12px;padding:12px 13px;font-size:12.5px;line-height:1.65;color:#9A3412}
+.note{font-size:11.5px;color:var(--gray);line-height:1.6;margin-top:8px}
+</style></head><body>
+<div class="top"><b>예매 흐름 (토스결제)</b><a href="/">← 앱으로</a></div>
+<div class="wrap">
+
+<div class="legend">
+  <span class="tag t-srv">우리 서버</span>
+  <span class="tag t-app">앱 지문 · smart.letskorail.com</span>
+  <span class="tag t-web">웹 지문 · www.korail.com</span>
+  <span class="tag t-none">코레일 호출 없음</span>
+</div>
+
+<h2>화면에서 하는 일 → 실제로 나가는 요청</h2>
+
+<div class="step">
+  <div class="hd"><span class="no">1</span><span class="ttl">사이트 접속</span><span class="tag t-none">0콜</span></div>
+  <div class="row"><span class="k">브라우저</span><span class="v">ktx.jdent28.com → Cloudflare 터널 → 맥미니 :8767</span></div>
+  <div class="row"><span class="k">인증</span><span class="v">Cloudflare Access + Google OAuth(승인제) 쿠키</span></div>
+  <div class="row"><span class="k">호출</span><span class="v"><code>/api/me</code> <code>/api/sync</code> <code>/api/daystatus</code> <code>/api/events</code> <code>/api/logs/stream</code>(SSE)</span></div>
+  <div class="fp none"><b>지문</b>코레일로 나가는 요청 없음. 달력은 <code>.daystatus.json</code> 6시간 디스크 캐시라 재시작해도 0콜.</div>
+</div>
+<div class="arrow">▼</div>
+
+<div class="step">
+  <div class="hd"><span class="no">2</span><span class="ttl">날짜 선택</span><span class="tag t-app">1콜</span></div>
+  <div class="row"><span class="k">모듈</span><span class="v">korail.py <code>day_calendar()</code> → korail2 세션</span></div>
+  <div class="row"><span class="k">API</span><span class="v"><code>smart.letskorail.com/…mobile.schedule.runDt</code></span></div>
+  <div class="row"><span class="k">특징</span><span class="v">빈 파라미터 1콜로 예매 달력 전체(명절·미오픈 포함)를 받아온다</span></div>
+  <div class="fp app"><b>앱 지문</b>UA <code>Dalvik/2.1.0 (Android 13; SM-S928N)</code> · <code>Device=AD</code> · <code>Version=250601002</code> · 계정별 requests.Session</div>
+</div>
+<div class="arrow">▼</div>
+
+<div class="step">
+  <div class="hd"><span class="no">3</span><span class="ttl">열차 조회</span><span class="tag t-app">페이징</span><span class="tag t-web">예매 전</span></div>
+  <div class="row"><span class="k">예매일</span><span class="v">korail2 <code>seatMovie.ScheduleView</code> — 1콜=10편, 마지막 출발시각+1분으로 슬라이딩</span></div>
+  <div class="row"><span class="k">예매 전</span><span class="v">korail.py <code>trains_from_timetable()</code> — 코레일 공식 xlsx 시각표 파싱(7일 캐시)</span></div>
+  <div class="fp app"><b>앱 지문 + Dynapath 토큰</b><code>ScheduleView</code>는 Dynapath 보호 경로라 요청마다 <code>x-dynapath-m-token</code>(device_id+타임스탬프 기반)과 <code>Sid</code>가 붙는다. korail2 기본판이 MACRO ERROR로 막히는 지점.</div>
+</div>
+<div class="arrow">▼</div>
+
+<div class="step">
+  <div class="hd"><span class="no">4</span><span class="ttl">호차 · 좌석맵</span><span class="tag t-web">웹 API</span></div>
+  <div class="row"><span class="k">모듈</span><span class="v">korail.py <code>list_cars_web()</code> / <code>seat_map_web()</code> → 전용 <code>_WEB_SESSION</code></span></div>
+  <div class="row"><span class="k">API</span><span class="v"><code>www.korail.com/classes/…mobile.research.TrainResearch</code><br><code>…research.TResidualSeatsResearch.do</code></span></div>
+  <div class="row"><span class="k">이유</span><span class="v">웹 좌석맵은 매진 호차도 조회되고 좌석 방향·배치 순서를 준다</span></div>
+  <div class="fp web"><b>웹 지문</b>UA <code>Chrome 128 (macOS)</code> · Referer <code>/ticket/search/general</code> · <code>Device=BH / Version=999999999</code> · 로그인 없는 익명 세션 — 코레일 웹 클라이언트와 동일한 신원.</div>
+</div>
+<div class="arrow">▼</div>
+
+<div class="step">
+  <div class="hd"><span class="no">5</span><span class="ttl">감시 시작 → 로그인</span><span class="tag t-app">1콜</span></div>
+  <div class="row"><span class="k">모듈</span><span class="v">web_server.py <code>runner_loop()</code> → korail.py <code>_make_korail()</code></span></div>
+  <div class="row"><span class="k">API</span><span class="v"><code>smart.letskorail.com/…mobile.login.Login</code></span></div>
+  <div class="row"><span class="k">계정</span><span class="v">설정 화면에 넣은 회원번호·비밀번호(서버 <code>userdata.db</code>에 동기화)</span></div>
+  <div class="fp app"><b>앱 지문 + Dynapath</b>로그인도 보호 경로. 세션은 <b>15분마다만</b> 갱신하고, 자격증명 거부(S034)면 재시도 없이 중단(계정 잠금 방지).</div>
+</div>
+<div class="arrow">▼</div>
+
+<div class="step">
+  <div class="hd"><span class="no">6</span><span class="ttl">감시 루프</span><span class="tag t-app">주기</span></div>
+  <div class="row"><span class="k">1</span><span class="v">열차 조회 <code>ScheduleView</code> (선택한 편만 필터)</span></div>
+  <div class="row"><span class="k">2</span><span class="v">좌석 선택 — <b>긴급</b>: 조건 자동 / <b>후보</b>: 1~10순위 라벨 매칭 / <b>직접</b>: 지정 좌석<br>후보·직접은 <code>TResidualSeatsResearch.do</code>로 빈자리 확인</span></div>
+  <div class="row"><span class="k">3</span><span class="v">게이트: 8회/초 · 120회/분 · 동시 6, 차단 감지 시 300초 전면 쿨다운</span></div>
+  <div class="fp app"><b>앱 지문(조회)</b> + <b class="t-web">웹 지문(좌석맵)</b> 두 갈래가 같은 IP에서 번갈아 나간다.</div>
+</div>
+<div class="arrow">▼</div>
+
+<div class="step">
+  <div class="hd"><span class="no">7</span><span class="ttl">예약</span><span class="tag t-app">1콜</span></div>
+  <div class="row"><span class="k">모듈</span><span class="v">korail.py <code>_reserve()</code> (korail2 기반, 좌석 지정 파라미터 주입)</span></div>
+  <div class="row"><span class="k">API</span><span class="v"><code>smart.letskorail.com/…mobile.certification.TicketReservation</code></span></div>
+  <div class="row"><span class="k">추가</span><span class="v">좌석 지정 시 <code>txtSrcarNo/txtSeatNo</code>, N카드 시 <code>txtDiscKndCd1=153</code> + 카드번호</span></div>
+  <div class="fp app"><b>앱 지문 + Dynapath</b>예약도 보호 경로. 성공하면 raw 응답의 <code>h_pnr_no</code>·<code>h_tot_prc</code>를 결제용으로 보관.</div>
+</div>
+<div class="arrow">▼</div>
+
+<div class="step">
+  <div class="hd"><span class="no">8</span><span class="ttl">토스페이 결제</span><span class="tag t-app">2콜</span></div>
+  <div class="row"><span class="k">모듈</span><span class="v">korail.py <code>pay_with_toss()</code> — <b>예약에 쓴 korail2 세션 그대로</b></span></div>
+  <div class="row"><span class="k">① 키</span><span class="v"><code>…mobile.pay.stlKeyQry.do</code> → <code>spayDvCd=13</code>(토스페이) 결제키</span></div>
+  <div class="row"><span class="k">② 결제</span><span class="v"><code>…mobile.payment.ReservationPayment</code> → PNR + 금액으로 결제</span></div>
+  <div class="row"><span class="k">전제</span><span class="v">코레일 계정에 토스페이가 미리 연결돼 있어야 함(없으면 TOSS_NO_KEY)</span></div>
+  <div class="fp app"><b>앱 지문</b>브라우저 없이 API 2콜로 끝. Dynapath 보호 경로가 아니라 토큰은 붙지 않는다.<br>※ 간편현금결제를 고르면 이 단계만 nodriver(실제 크롬)로 웹 결제화면을 통과한다 — nProtect·nFilter 때문.</div>
+</div>
+<div class="arrow">▼</div>
+
+<div class="step">
+  <div class="hd"><span class="no">9</span><span class="ttl">결과 확인</span><span class="tag t-app">2콜</span></div>
+  <div class="row"><span class="k">API</span><span class="v"><code>myTicket.MyTicketList</code> + 건별 <code>refunds.SelTicketInfo</code>(실제 좌석·할인)</span></div>
+  <div class="row"><span class="k">캐시</span><span class="v">계정별 로그인 세션 10분 재사용 · 티켓 20초 캐시</span></div>
+  <div class="fp app"><b>앱 지문</b>내 티켓 탭에서 표시.</div>
+</div>
+
+<h2>지문 요약</h2>
+<table>
+<tr><th>구간</th><th>호스트</th><th>UA</th><th>Device</th><th>세션</th></tr>
+<tr><td>브라우저→서버</td><td>ktx.jdent28.com</td><td>내 폰/PC 브라우저</td><td>—</td><td>CF Access + OAuth 쿠키</td></tr>
+<tr><td>조회·예약·결제</td><td>smart.letskorail.com</td><td>Dalvik (Android 13, SM-S928N)</td><td><b>AD</b> / 250601002</td><td>계정별 로그인 세션</td></tr>
+<tr><td>좌석맵·공지·시각표</td><td>www.korail.com</td><td>Chrome 128 (macOS)</td><td><b>BH</b> / 999999999</td><td>익명 공유 세션</td></tr>
+</table>
+
+<div class="note">Dynapath 토큰이 붙는 경로: <code>login.Login</code> · <code>seatMovie.ScheduleView</code> · <code>certification.TicketReservation</code> · <code>NonMemTicket</code> · <code>ScheduleViewSpecial</code> · <code>trn.prcFare.do</code></div>
+
+<h2>알아둘 점</h2>
+<div class="warn">
+<b>웹 호출 신원을 웹 클라이언트에 맞췄습니다 (2026-09-08).</b><br>
+코레일 SPA 코드표는 <code>TICKET=BH · HOLIDAY=BT · BIZ=BE · ANDROID=AD · IOS=IOS</code>.
+예전에는 브라우저 UA·Referer로 접속하면서 <code>Device=AD</code>(앱)를 보내 앞뒤가 맞지 않았고, 지금은
+<code>Device=BH / Version=999999999</code>로 보냅니다. 앱 호스트(<code>smart.letskorail.com</code>) 호출만 <code>AD</code>를 유지합니다.
+</div>
+</div></body></html>
