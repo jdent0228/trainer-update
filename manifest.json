@@ -1,5 +1,5 @@
 {
- "version": "0.1.25",
+ "version": "0.1.26",
  "files": {
   "paths.py": {
    "sha256": "acf97cae72d5e686cea47563f9e971b6cd3bc9e775ef594d952a67a153799430",
@@ -34,7 +34,7 @@
    "size": 3742
   },
   "VERSION": {
-   "sha256": "642f46b8a15e2df55ce289cc538928ab4364fe873b4f1df30dd1341f86dc50a5",
+   "sha256": "e44ea2e17d3b1a8e9c2ac543dee119917f635dfc84d39b3b1e5cd55d28ac4d7f",
    "size": 6
   },
   "static/index.html": {
@@ -46,8 +46,8 @@
    "size": 3433
   },
   "static/korail.js": {
-   "sha256": "1ee71d63792a42bed7678bde14e9b5b9f39505a6ba4444d451065520b29d18e8",
-   "size": 335295
+   "sha256": "954f1c1eb15c3496fe771754999c3c2364505d9154d3d1428a9dfd3b286634ef",
+   "size": 335611
   },
   "static/flow.html": {
    "sha256": "598f5a5dcb9fea0df7bbcd080d4f41d05b46e8614281d3a5b8e88dd0ff0d8f3b",
