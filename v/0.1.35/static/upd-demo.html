@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>업데이트 배너</title>
+<link rel="stylesheet" href="/style.css">
+<style>html,body{height:auto}body{background:var(--bg);padding:18px 0 30px;font-family:var(--font-sf)}
+h3{font-size:13.5px;font-weight:800;color:#4E5968;max-width:440px;margin:0 auto 8px;padding-left:18px}
+.sp{height:20px}</style></head><body><div id="r"></div>
+<script>
+const div=c=>{const e=document.createElement('div');if(c)e.className=c;return e;};
+const txt=(t,c,s)=>{const e=document.createElement(t);if(c)e.className=c;e.textContent=s;return e;};
+const IC='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10"/><path d="M8 10l4 4 4-4"/><path d="M4 18h16"/></svg>';
+function hero(ver,sub,btn,link){
+  const h=div('upd-hero');
+  const ic=div('upd-hero-ic'); ic.innerHTML=IC;
+  const tx=div('upd-hero-tx');
+  tx.append(txt('div','upd-hero-t','새 버전 '+ver+' 준비 완료'), txt('div','upd-hero-s',sub));
+  h.append(ic,tx);
+  const b=document.createElement(link?'a':'button'); b.className='upd-hero-btn'; b.textContent=btn;
+  h.appendChild(b);
+  const x=document.createElement('button'); x.className='upd-hero-x'; x.textContent='×'; h.appendChild(x);
+  return h;
+}
+const r=document.getElementById('r');
+r.append(txt('h3','','① 히어로 배너 — 차등 업데이트 준비됨'), hero('0.1.12','버튼 한 번이면 최신 버전으로 바뀝니다','지금 업데이트',false), div('sp'),
+         txt('h3','','② 히어로 배너 — 새 실행 파일 필요'),   hero('0.2.0','새 실행 파일을 내려받아야 합니다','받으러 가기',true), div('sp'));
+
+// 설정 › 프로그램 섹션
+function card(rows){
+  const c=div('card card-grid'); c.style.margin='0 14px';
+  rows.forEach((r,i)=>{ if(i) c.appendChild(div('grid-divider-h')); c.appendChild(r); });
+  return c;
+}
+function vrow(label,val,btn,blue){
+  const row=div('grid-cell-full acct-row');
+  row.append(txt('div','grid-cell-label',label), txt('div','acct-state',val));
+  const b=document.createElement('button'); b.className='upd-inline-btn'+(blue?' blue':''); b.textContent=btn;
+  row.appendChild(b); return row;
+}
+r.append(txt('h3','','③ 설정 › 프로그램 — 최신 버전'),
+         card([vrow('버전','0.1.11','업데이트 확인',false)]), div('sp'),
+         txt('h3','','④ 설정 › 프로그램 — 새 버전 있음'),
+         card([vrow('버전','0.1.11','업데이트 확인',false), vrow('새 버전 0.1.12','','지금 업데이트',true)]));
+</script></body></html>
