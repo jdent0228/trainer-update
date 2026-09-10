@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>기차놀이</title>
+  <link rel="stylesheet" href="/style.css?v=171">
+  <style>
+    #panels { bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
+    input[type="date"], input[type="time"] {
+      border: none; outline: none; background: transparent;
+      text-align: right; font-family: var(--font-sf);
+      font-size: 15.5px; letter-spacing: -0.3px;
+      color: var(--blue); font-weight: 600;
+      padding: 0; min-width: 92px; cursor: pointer;
+      -webkit-appearance: none;
+    }
+    input[type="date"]::-webkit-date-and-time-value,
+    input[type="time"]::-webkit-date-and-time-value {
+      text-align: right;
+    }
+    select.field-input { padding-right: 2px; cursor: pointer; }
+    .success-banner {
+      background: rgba(32,189,104,0.12);
+      border-radius: 16px;
+      margin-left: auto; margin-right: auto;
+      max-width: 440px;
+      padding: 14px 18px;
+      text-align: center;
+    }
+    .success-banner-title {
+      font-size: 15px; font-weight: 800;
+      color: var(--green-text); margin-bottom: 5px; letter-spacing: -0.2px;
+    }
+    .success-banner-body {
+      font-size: 13px; color: var(--text);
+      line-height: 1.55; word-break: break-all;
+    }
+    .error-text {
+      font-size: 12px; color: var(--red);
+      font-family: var(--font-mono);
+      word-break: break-all; white-space: pre-wrap;
+    }
+    .stat-value {
+      font-size: 15px; font-weight: 700;
+      color: var(--blue); font-family: var(--font-sf);
+      letter-spacing: -0.3px;
+    }
+    .stat-value.muted {
+      color: var(--text-muted); font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+<div id="onboard" style="display:none"></div>
+<div id="app">
+  <div id="header-mount"></div>
+  <div id="panels">
+    <div class="panel active" id="book-panel"></div>
+    <div class="panel" id="results-panel"></div>
+    <div class="panel" id="tickets-panel"></div>
+    <div class="panel" id="settings-panel"></div>
+  </div>
+  <div id="tabbar">
+    <div class="tabbar-row">
+      <div class="tab-item active" id="tab-book" onclick="switchTab('book')">
+        <div class="tab-icon-wrap">
+          <div class="tab-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div class="tab-running-dot"></div>
+        </div>
+        <div class="tab-label">예매</div>
+      </div>
+      <div class="tab-item" id="tab-results" onclick="switchTab('results')">
+        <div class="tab-icon-wrap">
+          <div class="tab-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg></div>
+          <div class="tab-running-dot"></div>
+        </div>
+        <div class="tab-label">결과</div>
+      </div>
+      <div class="tab-item" id="tab-tickets" onclick="switchTab('tickets')">
+        <div class="tab-icon-wrap">
+          <div class="tab-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9a2 2 0 0 0 2-2V6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v1a2 2 0 0 0 2 2v6a2 2 0 0 0-2 2v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-1a2 2 0 0 0-2-2z"/><path d="M13 5v14" stroke-dasharray="2 2"/></svg></div>
+          <div class="tab-running-dot"></div>
+        </div>
+        <div class="tab-label">내 티켓</div>
+      </div>
+      <div class="tab-item" id="tab-settings" onclick="switchTab('settings')">
+        <div class="tab-icon-wrap">
+          <div class="tab-icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+          <div class="tab-running-dot"></div>
+        </div>
+        <div class="tab-label">설정</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/korail.js?v=171"></script>
+</body>
+</html>
