@@ -1,5 +1,5 @@
 {
- "version": "0.1.18",
+ "version": "0.1.19",
  "files": {
   "paths.py": {
    "sha256": "acf97cae72d5e686cea47563f9e971b6cd3bc9e775ef594d952a67a153799430",
@@ -10,12 +10,12 @@
    "size": 406153
   },
   "korail.py": {
-   "sha256": "8074b08f53fe1e0cb92f1a93bf28d723941e1f1045ba6afbf8fe8c41d986c323",
-   "size": 154051
+   "sha256": "ca0731fb9cdcef411ae0152d998afac6262c24f46260e20a9f423b77d08a93d2",
+   "size": 155016
   },
   "web_server.py": {
-   "sha256": "616bc39d504872077d7103de06336d3204f3f74ebc10b5da47cc06d91e683bb4",
-   "size": 161992
+   "sha256": "1d3f5d6a3bc93785d745a7dc9ade52702c730f59891fecf6dde012298d8e656c",
+   "size": 181017
   },
   "updater.py": {
    "sha256": "82a41c4bc06e261844fd771794e76909403100c56c2557e3cc30d7967203e725",
@@ -34,7 +34,7 @@
    "size": 3742
   },
   "VERSION": {
-   "sha256": "8b29bfae8012c56777d20c8e62975c1640d86088e3eb1aa862b556441c7d3221",
+   "sha256": "2768baa31743ba59f712947d836b9de290b8c50ded07d0a624a6924187a60bb6",
    "size": 6
   },
   "static/index.html": {
@@ -46,16 +46,16 @@
    "size": 3433
   },
   "static/korail.js": {
-   "sha256": "1f6a450facd9a2df5679199e96cb810e5cf06ae78e5cf1fbb01279c783c90bc6",
-   "size": 324595
+   "sha256": "8d22c16a63fa8a73a8c2233b4be66a8eb999add377b3df744f61f47212198eee",
+   "size": 329559
   },
   "static/flow.html": {
    "sha256": "598f5a5dcb9fea0df7bbcd080d4f41d05b46e8614281d3a5b8e88dd0ff0d8f3b",
    "size": 12794
   },
   "static/style.css": {
-   "sha256": "58bed64f60b94e2f5a88b95a227b597c015a18c56fbee9836513f86144acb320",
-   "size": 123411
+   "sha256": "2268f1acbca07a5e71d176f4db87cc08873975228f034f58c85be9d929079f88",
+   "size": 123555
   },
   "static/upd-demo.html": {
    "sha256": "f07fe0118130a74f56e82879bbda2fcaffbd222176f9687f8ff3d922e4f5ef4f",
