@@ -1,5 +1,5 @@
 {
- "version": "0.1.22",
+ "version": "0.1.23",
  "files": {
   "paths.py": {
    "sha256": "acf97cae72d5e686cea47563f9e971b6cd3bc9e775ef594d952a67a153799430",
@@ -14,8 +14,8 @@
    "size": 155838
   },
   "web_server.py": {
-   "sha256": "1d3f5d6a3bc93785d745a7dc9ade52702c730f59891fecf6dde012298d8e656c",
-   "size": 181017
+   "sha256": "bef12b893476555b77873776846b674a8349a0e0a891b332e4fb2c3d807072a8",
+   "size": 182163
   },
   "updater.py": {
    "sha256": "82a41c4bc06e261844fd771794e76909403100c56c2557e3cc30d7967203e725",
@@ -34,7 +34,7 @@
    "size": 3742
   },
   "VERSION": {
-   "sha256": "f99b5fa20db767ef69cdc12e51ab81728ca56f02ebcd85a3d945188737e706c4",
+   "sha256": "5006aed03473109e98c3b4009a36fda7e1e6afbf98996ea176ade05c51a3a922",
    "size": 6
   },
   "static/index.html": {
@@ -46,8 +46,8 @@
    "size": 3433
   },
   "static/korail.js": {
-   "sha256": "38e29174738500a8687125d856e09b2428306d3041450689222f030f085f1bca",
-   "size": 331098
+   "sha256": "c835a2c6cda2d3140ca47f12c1b2e210c4aa0f6ead05233c6e20ed2cfa78022c",
+   "size": 330983
   },
   "static/flow.html": {
    "sha256": "598f5a5dcb9fea0df7bbcd080d4f41d05b46e8614281d3a5b8e88dd0ff0d8f3b",
