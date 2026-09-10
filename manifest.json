@@ -1,5 +1,5 @@
 {
- "version": "0.1.30",
+ "version": "0.1.31",
  "files": {
   "paths.py": {
    "sha256": "acf97cae72d5e686cea47563f9e971b6cd3bc9e775ef594d952a67a153799430",
@@ -34,7 +34,7 @@
    "size": 3742
   },
   "VERSION": {
-   "sha256": "e083da1e11d6bb10598d9d2d631c32e2b7568efb8866ba273caa8ddbac19ede1",
+   "sha256": "d06fbcea5ea3ef5fbdf30e081fd93878efc707acb056dd71c8e9fa314989d22e",
    "size": 6
   },
   "static/index.html": {
@@ -54,8 +54,8 @@
    "size": 12794
   },
   "static/style.css": {
-   "sha256": "15594bc5a95dcdf7e157a810ccc50fa0f9224ec1098d634b303ee2617e078064",
-   "size": 126999
+   "sha256": "db7282ece89af607e9efe9104be8dc3b1a3a520b20b96b4b1e01be9eebaba243",
+   "size": 127018
   },
   "static/upd-demo.html": {
    "sha256": "f07fe0118130a74f56e82879bbda2fcaffbd222176f9687f8ff3d922e4f5ef4f",
