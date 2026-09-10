@@ -1,0 +1,414 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>예매 API 흐름 — 기차놀이</title>
+<style>
+:root{--blue:#3182F6;--green:#0CA678;--orange:#F76707;--red:#F04452;--purple:#7048E8;
+      --gray:#8B95A1;--field:#4E5968;--line:#E5E8EC;--bg:#F2F4F6;--text:#191F28}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',system-ui,sans-serif;
+  -webkit-text-size-adjust:100%;letter-spacing:-.2px}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);
+  padding:12px 16px 0;box-shadow:0 1px 0 rgba(0,0,0,.06)}
+.top h1{font-size:17px;margin:0 0 3px;font-weight:800}
+.top p{margin:0 0 10px;font-size:12px;color:var(--gray);line-height:1.6}
+.cases{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
+.cases::-webkit-scrollbar{display:none}
+.case{flex:none;border:none;background:#EDF0F3;color:var(--field);font:700 12.5px/1 inherit;
+  padding:9px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;letter-spacing:-.2px}
+.case.on{background:var(--blue);color:#fff}
+.wrap{padding:16px 14px 80px;max-width:860px;margin:0 auto}
+.card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.intro{padding:13px 15px;font-size:12.5px;line-height:1.7;color:var(--field);margin-bottom:14px}
+.intro b{color:var(--text)}
+h2{font-size:12.5px;color:var(--gray);margin:26px 0 10px;font-weight:800}
+table.mx{width:100%;border-collapse:collapse;font-size:11.5px;background:#fff;border-radius:14px;
+  overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+table.mx th,table.mx td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+table.mx th{background:#F7F9FA;color:var(--gray);font-weight:800;font-size:10.5px}
+table.mx td:first-child,table.mx th:first-child{text-align:left;font-weight:700;color:var(--text)}
+table.mx tr:last-child td{border-bottom:none}
+table.mx tr.on td{background:rgba(49,130,246,.07)}
+table.mx .y{color:var(--green);font-weight:800}
+table.mx .n{color:#C6CDD5}
+.step{padding:15px 16px;margin-top:0;scroll-margin-top:120px}
+.step.off{opacity:.55}
+.hd{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.no{flex:none;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;
+  font:800 11px/1 inherit;display:flex;align-items:center;justify-content:center}
+.no.l{background:var(--green)}.no.w{background:var(--orange)}
+.ttl{font-size:15px;font-weight:800;flex:1}
+.tag{font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:7px;white-space:nowrap}
+.t-m{background:rgba(49,130,246,.12);color:#1B64DA}
+.t-w{background:rgba(247,103,7,.13);color:#C2410C}
+.t-l{background:rgba(12,166,120,.14);color:#0B7A57}
+.t-skip{background:#EDF0F3;color:#8B95A1}
+.t-dyna{background:rgba(112,72,232,.12);color:#5B32C9}
+.ep{font:600 11.5px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--blue);
+  word-break:break-all;margin:2px 0 10px;padding-left:31px}
+.note{font-size:12.5px;line-height:1.7;color:var(--field);margin:0 0 10px}
+.note.warn{color:#C2410C;background:rgba(247,103,7,.07);border-left:3px solid var(--orange);
+  padding:9px 11px;border-radius:0 8px 8px 0}
+.note.hit{color:#B02A37;background:rgba(240,68,82,.07);border-left:3px solid var(--red);
+  padding:9px 11px;border-radius:0 8px 8px 0}
+.note.skip{color:#6B7684;background:#F4F6F8;border-left:3px solid #C6CDD5;
+  padding:9px 11px;border-radius:0 8px 8px 0;font-weight:600}
+.sec{margin-top:12px}
+.sec>h3{font-size:11px;font-weight:800;margin:0 0 2px;padding:7px 10px;border-radius:8px 8px 0 0}
+.sec.in>h3{background:rgba(49,130,246,.09);color:#1B64DA}
+.sec.out>h3{background:rgba(12,166,120,.10);color:#0B7A57}
+.sec.cond>h3{background:rgba(112,72,232,.10);color:#5B32C9}
+.sec>div{border:1px solid var(--line);border-top:none;border-radius:0 0 10px 10px}
+.f{padding:8px 11px;border-top:1px solid #F1F3F5}
+.f:first-child{border-top:none}
+.fh{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-bottom:2px}
+.fh code{font:700 11.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
+  color:var(--text);background:#F1F3F5;padding:1px 5px;border-radius:5px;word-break:break-word}
+.sec.cond .fh code{background:rgba(112,72,232,.10);color:#5B32C9}
+.rq{font-size:9.5px;font-weight:800;padding:2px 5px;border-radius:5px;letter-spacing:0}
+.rq.q{background:rgba(240,68,82,.11);color:#C0392F}
+.rq.o{background:#EDF0F3;color:#8B95A1}
+.rq.c{background:rgba(112,72,232,.12);color:#5B32C9}
+.fd{font-size:12px;line-height:1.65;color:var(--field)}
+.fd b{color:var(--text)}
+.fx{font-size:11px;line-height:1.6;color:var(--gray);margin-top:2px}
+.fx s{text-decoration:none;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#5B6470}
+.arrow{height:20px;display:flex;justify-content:center;align-items:center;color:#C6CDD5;font-size:14px}
+.foot{margin-top:26px;font-size:11.5px;color:var(--gray);line-height:1.75;text-align:center}
+</style></head><body>
+<div class="top">
+  <h1>예매 API 흐름</h1>
+  <p>열차 조회 → 좌석 확인 → 예약 → 결제. 모든 단계와 모든 파라미터를 항상 표시합니다.
+     케이스를 고르면 그 경로에서 <b>쓰지 않는 단계</b>에 표시가 붙습니다.</p>
+  <div class="cases" id="cases"></div>
+</div>
+<div class="wrap">
+  <div class="card intro" id="intro"></div>
+  <h2>케이스별로 어떤 단계를 쓰는가</h2>
+  <div id="mx"></div>
+  <h2>단계별 상세</h2>
+  <div id="flow"></div>
+  <div class="foot">기차놀이 내부 문서 · 실측 기준 2026-09-09<br>
+    모바일 API <b>smart.letskorail.com</b> · 웹 API <b>www.korail.com</b><br>
+    korail.py · web_server.py · korail2(dhfhfk fork)</div>
+</div>
+<script>
+// f: [이름, 필수도, 설명, 예시, 언제만]  필수도: 필 | 선 | 조
+const S = [
+{id:'code', kind:'m', t:'비밀번호 암호화 키 받기', ep:'POST .common.code.do',
+ note:'로그인 직전 1회. 코레일이 매번 새 키를 내려주고, 그 키로 비밀번호를 암호화해야 로그인이 통과된다. 평문 비밀번호는 절대 전송되지 않는다.',
+ in:[['code','필','받아올 코드표 이름. 로그인 암호화 키를 달라는 뜻의 고정 문자열.','"app.login.cphd"']],
+ out:[['strResult','','처리 결과.','"SUCC" 성공 / "FAIL" 실패'],
+      ['app.login.cphd.key','','AES 암호화 키. 이 키로 비밀번호를 AES-CBC 암호화한 뒤 base64를 두 번 걸어 txtPwd로 보낸다.','32자 문자열'],
+      ['app.login.cphd.idx','','키 인덱스. 로그인 요청의 idx에 그대로 넣어 "어느 키로 암호화했는지" 알린다.','"3"']]},
+
+{id:'login', kind:'m', dyna:1, t:'로그인', ep:'POST .login.Login',
+ note:'세션 키(Key)를 받는 단계. 이후 모든 모바일 API 호출이 이 Key를 달고 나간다. 앱은 30사이클마다 한 번씩 다시 로그인해 세션을 갱신한다.',
+ in:[['Device','필','기기 구분 코드. 모바일 API는 코레일 앱을 흉내내므로 앱 코드를 쓴다.','"AD" 안드로이드 / "IOS" 아이폰'],
+     ['Version','필','앱 버전. 코레일이 구버전을 막기 때문에 실제 최신 앱 버전을 따라가야 한다.','"250601002"'],
+     ['txtInputFlg','필','아이디를 무엇으로 넣었는지 알리는 플래그.','"2" 회원번호 · "4" 휴대폰 · "5" 이메일'],
+     ['txtMemberNo','필','아이디. 위 플래그에 맞는 형식으로.','"1234567890"'],
+     ['txtPwd','필','①에서 받은 키로 암호화한 비밀번호.','base64 문자열'],
+     ['idx','필','①에서 받은 키 인덱스.','"3"'],
+     ['Sid','조','Dynapath 보호 경로에서만. 타임스탬프로 만든 세션 ID.','13자리 숫자 기반','Dynapath 경로'],
+     ['(헤더) x-dynapath-m-token','조','Dynapath 보호 경로에서만. 기기ID·타임스탬프·난수 4자로 만든 위변조 방지 토큰. 이게 없으면 로그인 자체가 거부된다 — korail2 원본 대신 포크를 쓰는 이유.','생성 토큰','Dynapath 경로']],
+ out:[['strResult','','처리 결과.','"SUCC"'],
+      ['Key','','<b>세션 키.</b> 이후 모든 모바일 API 호출의 Key 파라미터로 들어간다. 만료되면 P058 오류.','세션 문자열'],
+      ['strMbCrdNo','','회원번호 10자리.','"1234567890"'],
+      ['strCustNm','','회원 이름. 앱 로그의 "로그인 성공 · 정영우"가 이 값.','"정영우"'],
+      ['strEmailAdr','','등록된 이메일.','"me@example.com"']]},
+
+{id:'sched', kind:'m', dyna:1, t:'열차 조회', ep:'POST .seatMovie.ScheduleView',
+ note:'한 번에 최대 10편. 앱은 페이지 마지막 열차의 출발시각 +1분을 다음 txtGoHour로 넣어 다시 부르는 식으로 시간대를 훑는다(슬라이딩 페이징, 기본 상한 6페이지).',
+ in:[['Device / Version','필','로그인과 같은 값.','"AD" / "250601002"'],
+     ['radJobId','필','조회 업무 구분. 1 = 일반 승차권 조회.','"1"'],
+     ['txtMenuId','필','메뉴 구분. 승차권 예매 화면.','"11"'],
+     ['txtGoAbrdDt','필','승차일. 이 날짜의 열차만 나온다.','"20260930"'],
+     ['txtGoStart','필','출발역 <b>이름</b>. 역 코드가 아니라 한글 이름을 넣는다.','"광주송정"'],
+     ['txtGoEnd','필','도착역 이름.','"용산"'],
+     ['txtGoHour','필','조회 시작 시각. 이 시각 <b>이후</b> 출발 열차부터 준다.','"070000"'],
+     ['selGoTrain / txtTrnGpCd','필','열차 종류. 두 값을 같게 보낸다.','"109" 전체 · "100" KTX/산천 · "101" ITX-새마을 · "102" 무궁화'],
+     ['txtPsgFlg_1','필','어른 인원.','"1"'],
+     ['txtPsgFlg_2 / _8 / _3','선','어린이 / 유아 / 경로 인원. 앱은 어른만 쓰므로 0.','"0"'],
+     ['txtPsgFlg_4 / _5','선','중증장애인 / 경증장애인 인원.','"0"'],
+     ['txtSeatAttCd_4','필','좌석 속성. 015 = 일반석(휠체어석·자전거석 등이 아닌 보통 자리).','"015"'],
+     ['txtSeatAttCd_2 / _3','선','예비 속성 슬롯. 안 쓰면 000.','"000"'],
+     ['txtCardPsgCnt / txtGdNo / txtJobDv','선','미사용. 빈 값으로 보낸다.','""'],
+     ['adjStnScdlOfrFlg','선','인접역 열차 포함 여부. 켜져 있으면 요청 구간이 아닌 열차(서울→부전 등)가 10편 정원을 잡아먹어 페이지 수만 늘어난다. <b>앱이 N으로 꺼서 주입한다.</b>','"N"']],
+ out:[['trn_infos.trn_info[]','','조회된 열차 배열. 아래는 배열 원소의 필드.','최대 10개'],
+      ['h_trn_no','','열차 번호.','"406"'],
+      ['h_trn_clsf_cd','','<b>열차 형식 코드 = 편성 식별자.</b> 좌석 배치를 가르는 진짜 기준. 열차 그룹(h_trn_gp_cd)으로는 KTX와 산천이 구분되지 않는다.','"00" KTX · "07" 산천A · "0A" 산천B · "10" 산천C · "08" ITX-새마을'],
+      ['h_trn_clsf_nm','','열차 종류 이름.','"KTX"'],
+      ['h_trn_gp_cd','','열차 그룹 코드. KTX와 KTX-산천이 똑같이 100이라 편성 판별에는 못 쓴다.','"100"'],
+      ['h_dpt_dt / h_dpt_tm','','출발일 / 출발시각.','"20260930" / "074100"'],
+      ['h_arv_dt / h_arv_tm','','도착일 / 도착시각.','"20260930" / "094600"'],
+      ['h_run_dt','','운행일. 자정을 넘기는 열차는 출발일과 다를 수 있어 예약 요청에 따로 실린다.','"20260930"'],
+      ['h_dpt_rs_stn_cd / h_arv_rs_stn_cd','','출발/도착역 코드. 예약·좌석 API는 이름이 아니라 이 코드를 쓴다.','"0036" 광주송정 / "0104" 용산'],
+      ['h_dpt_rs_stn_nm / h_arv_rs_stn_nm','','출발/도착역 이름. 앱은 이 값으로 "요청한 구간이 맞는지" 한 번 더 거른다.','"광주송정" / "용산"'],
+      ['h_dpt_stn_run_ordr / h_arv_stn_run_ordr','','<b>정차 순번</b>(이 열차의 몇 번째 정차역인지). 호차·좌석맵 API의 필수 입력인데 korail2가 버려서, 앱이 조회 응답을 직접 가로채 보관한다.','"3" / "11"'],
+      ['h_gen_rsv_cd','','<b>일반실 상태.</b> 객실등급을 정하는 근거.','"11" 예약가능 · "13" 매진 · "00" 미편성'],
+      ['h_spe_rsv_cd','','<b>특실 상태.</b> 값 의미는 위와 같다.','"11" / "13" / "00"'],
+      ['h_wait_rsv_flg','','예약대기 가능 여부.','"-2" 좌석 있음 · "9" 예약대기 가능 · "0" 대기도 없음'],
+      ['h_rsv_psb_flg / h_rsv_psb_nm','','예약 가능 여부와 안내 문구.','"Y" / "좌석많음"'],
+      ['h_gen_rsv_nm / h_spe_rsv_nm','','일반실/특실 잔여 안내 문구.','"좌석많음"'],
+      ['h_spe_rsv_psb_nm','','특실 안내(가격·적립 포함). 등급별 요금을 눈으로 확인할 때 쓴다.','"60,500원 5%적립"']]},
+
+{id:'cls', kind:'l', t:'객실등급 결정', ep:'seat_class_for(train, option)  — 앱 내부, 호출 없음',
+ note:'이 값 하나가 뒤의 호차 목록·좌석맵·예약 요청 <b>세 곳</b>에 똑같이 들어가야 한다. 한 곳이라도 다르면 예약이 ERS700120으로 거절된다(2026-09-09 실사고).',
+ in:[['option','필','사용자의 좌석 등급 설정.','GENERAL_FIRST 일반실 우선 · GENERAL_ONLY 일반실만 · SPECIAL_FIRST 특실 우선 · SPECIAL_ONLY 특실만'],
+     ['has_general_seat()','필','일반실에 자리가 있는지. 조회 응답의 h_gen_rsv_cd == "11".','true / false'],
+     ['has_special_seat()','필','특실에 자리가 있는지. h_spe_rsv_cd == "11".','true / false']],
+ out:[['"1" | "2"','','일반실 / 특실. 규칙: <b>일반실만</b>→항상 1, <b>특실만</b>→항상 2, <b>일반실 우선</b>→일반실 자리 있으면 1 없으면 2, <b>특실 우선</b>→특실 자리 있으면 2 없으면 1.','KTX 406 · 특실 우선 → "2"']]},
+
+{id:'cars', kind:'w', t:'호차 목록 + 호차별 잔여석', ep:'POST .research.TrainResearch',
+ note:'<b>1콜로 호차 전체가 배열로 온다</b> — 호차마다 부르는 게 아니다. 단 ①요청한 등급의 호차만(일반실로 부르면 특실 호차는 안 온다) ②<b>잔여석이 있는 호차만</b> ③좌석 개수만, 어느 자리인지는 없다. 하나도 없으면 목록 자체가 ERI411321로 실패하므로 매진 열차 감시에서는 이 단계를 건너뛴다. 매진 호차까지 포함한 편성 전체가 필요하면 1~20호차 좌석맵을 병렬로 찔러보는 별도 경로(list_cars_probe)를 쓴다 — 호차당 1콜이라 비싸다.',
+ in:[['Device','필','<b>판매 창구 식별자</b>(기기 종류가 아니다). 비우면 "사용불가한 창구/Device입니다"(ERR299907)로 거절된다. 웹 호스트로 나갈 때는 브라우저 UA·Referer와 앞뒤를 맞춰 웹 창구 코드를 쓴다. 2026-09-09 실측: AD를 보내도 응답은 같았지만, 창구별로 정책(명절 대기열·판매 개시)이 갈릴 수 있는 축이라 굳이 섞지 않는다.','"BH" 승차권 웹 · "BE" 비즈니스 · "BT" 명절 · "AD" 안드로이드 앱 · "IOS" 아이폰 앱'],
+     ['Version','필','웹 클라이언트 버전 자리. 2026-09-09 실측으로 <b>검증하지 않는다</b>(아무 값이나 통과). 모바일 쪽 Version은 반대로 구버전이 차단될 수 있어 관리 대상.','"999999999"'],
+     ['txtMenuId','필','메뉴 구분.','"11"'],
+     ['txtRunDt','필','운행일. 조회 응답의 h_run_dt.','"20260930"'],
+     ['txtDptDt','필','출발일. h_dpt_dt.','"20260930"'],
+     ['txtDptTm','필','출발 시각. h_dpt_tm.','"074100"'],
+     ['txtTrnNo','필','열차 번호.','"406"'],
+     ['txtTrnClsfCd','필','열차 형식 코드. h_trn_clsf_cd 그대로.','"00"'],
+     ['txtTrnGpCd','필','열차 그룹 코드.','"100"'],
+     ['txtDptRsStnCd / txtArvRsStnCd','필','출발/도착역 코드.','"0036" / "0104"'],
+     ['txtPsrmClCd','필','<b>객실등급.</b> 이 값에 따라 나오는 호차 집합이 완전히 달라진다.','"1" 일반실 → 1·5~18호차 / "2" 특실 → 2·3·4호차'],
+     ['txtSeatAttCd','필','좌석 속성. 일반석.','"015"'],
+     ['txtDptStnRunOrdr / txtArvStnRunOrdr','필','정차 순번. 조회 응답 값을 그대로. 빠지면 응답이 비거나 실패한다.','"3" / "11"'],
+     ['txtTotPsgCnt','필','인원. 이 인원이 앉을 수 있는 호차만 고려된다.','"1"'],
+     ['txtCustSrtCd / txtGdNo','선','미사용.','""']],
+ out:[['srcar_infos.srcar_info[]','','호차 배열.','일반실 15개 등'],
+      ['h_srcar_no','','호차 번호. <b>4자리 0채움</b> 형식이라 예약 요청에 그대로 쓸 수 있다.','"0001"'],
+      ['h_rest_seat_cnt','','그 호차의 남은 좌석 수. 앱은 인원수 이상인 호차만 본다.','"51"'],
+      ['h_seat_cnt','','그 호차 정원.','"56"'],
+      ['h_rcmd_srcar_no','','코레일이 추천하는 호차. 배열 밖에 1개만 온다.','"0009"'],
+      ['(실측 예) KTX 406','','같은 열차를 등급별로 두 번 부른 결과. 4호차가 일반실 목록엔 없고 특실 목록에만 있다.','등급 1 → 1·5·6·7·8·9·10·11·12·13·14·15·16·17·18호차 (15개) / 등급 2 → 2·3·4호차 (3개)'],
+      ['h_msg_cd (실패)','','업무 오류 코드. 이 두 코드는 폴백해도 결과가 같아 앱이 즉시 포기한다.','"ERI411321" 잔여석 없음 · "ERI411092" 그 등급 객실 미편성']]},
+
+{id:'map', kind:'w', t:'호차 좌석맵', ep:'POST .research.TResidualSeatsResearch.do',
+ note:'호차 1개당 1회. <b>최대 6개 캡은 앱이 스스로 건 제한이고, 자동 선택 모드에만 적용된다</b> — 전 호차를 다 볼 수 있는 유일한 모드라서다. 그마저도 만점 자리(창측+원하는 방향)를 찾으면 즉시 멈춘다. 후보 좌석·지정 좌석 감시는 볼 호차가 이미 정해져 있어 캡이 없다(실질 1~3개). 파라미터 이름이 호차 목록과 달리 <b>txt 접두사가 없다</b>(웹 프런트가 그렇게 부른다).',
+ warn:'모바일 폴백 경로(.research.ResidualSeatsResearch.do)는 같은 세션에서 호차 목록을 먼저 부르지 않으면 "[3]인증정보에 문제가 있습니다"로 거부한다. 웹 경로는 그런 선행 조건이 없다.',
+ in:[['Device / Version','필','웹 클라이언트 신원.','"BH" / "999999999"'],
+     ['srcarNo','필','볼 호차 번호. <b>0채움 없이</b> 보내도 된다.','"1"'],
+     ['psrmClCd','필','객실등급. 호차와 등급이 맞지 않으면 ERI411092.','"1" / "2"'],
+     ['runDt / trnNo','필','운행일 / 열차 번호.','"20260930" / "406"'],
+     ['trnClsfCd / trnGpCd','필','열차 형식 / 그룹.','"00" / "100"'],
+     ['dptRsStnCd / arvRsStnCd','필','역 코드.','"0036" / "0104"'],
+     ['dptStnRunOrdr / arvStnRunOrdr','필','정차 순번.','"3" / "11"'],
+     ['totPsgCnt','필','인원.','"1"'],
+     ['seatAttCd','필','좌석 속성.','"015"'],
+     ['gdNo','선','미사용.','""']],
+ out:[['seatList[]','','좌석 배열. <b>응답 순서가 곧 실제 배치 순서</b>(왼쪽이 뒤, 오른쪽이 앞)라 앱은 정렬하지 않고 그대로 그린다.','56개'],
+      ['seat_no','','<b>예약 요청에 넣는 좌석 번호.</b> 사람이 보는 표기와 전혀 다른 내부 슬롯 번호다.','"35" (= 9C)'],
+      ['seat_spec','','사람이 보는 좌석 표기. 숫자=열, 알파벳=칸.','"9C"'],
+      ['sale_psb_flg','','판매 가능 여부. 앱은 Y인 자리만 후보로 삼는다.','"Y" 가능 / "N" 이미 팔림'],
+      ['dir_seat_att_cd','','좌석 방향.','"009" 순방향 · "010" 역방향'],
+      ['rq_seat_att_cd','','<b>좌석 속성.</b> 자격이 필요한 자리를 걸러내는 근거. 휠체어석·노인석 등은 후보에서 제외된다.','"015" 일반 · "019" 유아동반 · "021" 휠체어 · "024" 할당석 · "033" 입석 · "052" 대피도우미'],
+      ['etc_seat_att_cd','','보조 속성. rq=000이고 etc=001이면 좌석표 격자에는 있지만 <b>실제 좌석이 없는 칸</b>(정원에서 빠진다).','"000" / "001"'],
+      ['intg_msg','','좌석 안내 문구.','"" 또는 안내문'],
+      ['seat_ary_cd','','좌석 배열 방식. 창측 열을 판정하는 데 쓴다(응답에 창측 플래그가 따로 없다).','"4" = 2+2 (A·D 창측) · "3" = 2+1 (A·C 창측)'],
+      ['seat_total_count','','코레일이 말하는 정원(빈 격자 제외).','"56"'],
+      ['seat_remain_count','','남은 좌석 수.','"51"'],
+      ['car_tp_cd','','<b>차량 타입 코드 8자리.</b> 앞 4자리가 차량 형식, 뒤 4자리가 편성 번호대. 코레일이 좌석 배치도를 고르는 진짜 기준이라 앱의 편성 그룹 판별도 이 값을 쓴다.','"50454101" 산천 382석 · "50534101" 산천 413석'],
+      ['up_dn_dv_cd','','상행/하행 구분. 같은 편성이라도 방향에 따라 좌석 방향이 뒤집힌다.','상행/하행 코드'],
+      ['scar_no','','응답이 확인해 주는 호차 번호.','"0001"']]},
+
+{id:'pick', kind:'l', t:'좌석 고르기', ep:'pick_seats() / 후보 대조  — 앱 내부, 호출 없음',
+ note:'좌석맵에서 받은 자리들을 선호 조건으로 점수를 매겨 고른다. 인원이 여럿이면 같은 호차 안에서 뽑고, 2명이면 같은 열 옆자리(A·B 또는 C·D)를 먼저 시도한다.',
+ in:[['prefs.side','선','창측/통로측 선호. "_only"가 붙으면 조건에 맞는 자리가 없을 때 예약하지 않고 다음 사이클로 넘어간다.','"window" 창측 우선 · "aisle_only" 통로측만'],
+     ['prefs.dir','선','순방향/역방향 선호. 규칙은 위와 같다.','"fwd" 순방향 우선 · "rev_only" 역방향만'],
+     ['인원','필','같은 호차에서 이 수만큼 확보해야 한다.','1'],
+     ['제외 속성','필','자격이 필요하거나 좌석 개념이 아닌 자리는 후보에서 뺀다.','020 노인 · 021 휠체어 · 028 전동휠체어 · 032 자전거 · 033 입석 · 055 장애인보호자']],
+ out:[['[{car_no, seat_no, label}]','','예약 요청에 실을 좌석 목록. car_no는 4자리 0채움, seat_no는 좌석맵의 내부 번호.','[{car_no:"0001", seat_no:"35", label:"9C"}]']]},
+
+{id:'rsv', kind:'m', dyna:1, t:'예약', ep:'GET .certification.TicketReservation',
+ note:'POST가 아니라 <b>GET 쿼리스트링</b>으로 보낸다. 좌석을 지정하지 않으면 코레일이 알아서 자리를 배정한다.',
+ hit:'<b>ERS700120 "요청 호차와 객실등급이 불일치 합니다"</b> — txtSrcarNo1이 가리키는 호차의 등급과 txtPsrmClCd1이 다를 때. 2026-09-09 실사고: 좌석은 일반실 1호차에서 골랐는데(txtSrcarNo1="0001") 요청 등급은 특실(txtPsrmClCd1="2")로 나갔다.',
+ in:[['Device / Version / Key','필','세션. Key는 로그인 응답 값.','"AD" / "250601002" / 세션키'],
+     ['txtJobId','필','<b>작업 종류.</b> 좌석을 잡느냐 대기를 거느냐를 가른다.','"1101" 좌석 예약 · "1102" 예약대기'],
+     ['txtStndFlg','필','<b>입석 여부.</b>','"N" 좌석 · "Y" 입석'],
+     ['hidFreeFlg','필','자유석 여부.','"N"'],
+     ['txtMenuId','필','메뉴 구분. N카드를 쓰면 A2로 바뀐다.','"11" (N카드 시 "A2")'],
+     ['txtTotPsgCnt','필','총 인원.','"1"'],
+     ['txtJrnyCnt','필','여정 수. 앱은 편도만 쓴다.','"1"'],
+     ['txtSrcarCnt','필','<b>지정 좌석 수.</b> 좌석 미지정이면 0. 이 값이 0이면 아래 호차·좌석 파라미터를 아예 보지 않는다.','"0" 미지정 · "1" 1석 지정'],
+     ['txtSeatAttCd1~5','필','좌석 속성 슬롯 5개. 4번째만 015(일반석)이고 나머지는 000.','"000","000","000","015","000"'],
+     ['txtGdNo','선','미사용.','""'],
+     ['txtJrnySqno1','필','여정 순번.','"001"'],
+     ['txtJrnyTpCd1','필','여정 종류. 11 = 편도.','"11"'],
+     ['txtDptDt1 / txtDptTm1','필','승차일 / 출발시각.','"20260930" / "074100"'],
+     ['txtDptRsStnCd1 / txtArvRsStnCd1','필','출발/도착역 코드.','"0036" / "0104"'],
+     ['txtTrnNo1 / txtRunDt1','필','열차 번호 / 운행일.','"406" / "20260930"'],
+     ['txtTrnClsfCd1 / txtTrnGpCd1','필','열차 형식 / 그룹.','"00" / "100"'],
+     ['txtPsrmClCd1','필','<b>객실등급.</b> 지정한 호차의 등급과 반드시 같아야 한다. korail2는 이 값을 사용자 설정(option)만 보고 정하므로, 앱이 좌석을 고른 등급으로 덮어써 둔다.','"1" 일반실 · "2" 특실'],
+     ['txtChgFlg1','선','변경 플래그. 신규 예약은 빈 값.','""'],
+     ['txtJrnySqno2 … txtChgFlg2','선','두 번째 여정(왕복·환승)용 슬롯. 편도라 <b>전부 빈 문자열</b>로 보낸다.','""'],
+     ['txtPsgTpCd1','필','승객 종류.','"1" 어른 · "3" 어린이 · "8" 유아'],
+     ['txtDiscKndCd1','필','할인 종류. N카드를 쓰면 153.','"000" 없음 · "153" N카드'],
+     ['txtCompaCnt1','필','그 종류의 인원 수.','"1"'],
+     ['txtCardCode_1 / txtCardNo_1 / txtCardPw_1','선','할인카드 정보. 안 쓰면 빈 값.','""']],
+ addLabel:'좌석을 지정할 때만 추가 — 자동 선택 · 후보 좌석 · 지정 좌석 감시',
+ add:[['txtSrcarCnt','조','지정할 좌석 수로 덮어쓴다.','"1"'],
+      ['txtSrcarNo1 … txtSrcarNoN','조','<b>호차.</b> 좌석 수만큼 1부터 번호를 올려가며 붙인다. 4자리 0채움.','txtSrcarNo1="0001"'],
+      ['txtSeatNo1 … txtSeatNoN','조','<b>좌석 번호.</b> 좌석맵 응답의 seat_no. 사람이 보는 "9C"가 아니다.','txtSeatNo1="35"'],
+      ['txtPsrmClCd1','조','좌석을 고른 등급으로 강제 일치시킨다. ERS700120 재발 방지용 2차 방어.','"1"']],
+ ncardLabel:'N카드 할인을 쓸 때만 추가 — 예약대기에는 붙이지 않는다',
+ ncard:[['txtMenuId','조','N카드 예매 메뉴로 바꾼다. 기본 11 대신.','"A2"'],
+        ['txtDiscKndCd1','조','할인 종류를 N카드로.','"153"'],
+        ['txtCardNo_1','조','<b>내부 카드번호.</b> 앱 화면의 16자리 승차권번호가 아니라 조회 API가 주는 내부 번호.','"…9566"'],
+        ['txtPsgTpCd1 / txtCompaCnt1','조','어른 1명.','"1" / "1"']],
+ out:[['h_pnr_no','','<b>예약번호.</b> 이후 결제·취소·조회의 기준.','"..."'],
+      ['h_wct_no','','발권 창구 번호. <b>결제 요청 필수값</b>인데 korail2가 이 응답을 통째로 버려서, 앱이 응답을 가로채 따로 보관한다.','"..."'],
+      ['h_tmp_job_sqno1 / h_tmp_job_sqno2','','임시 작업 일련번호 2개. 역시 결제 필수값이라 같이 보관한다.','"..."'],
+      ['h_tot_prc','','<b>운임(할인 전).</b> 총액이 아니다 — 일반실·무할인일 때만 우연히 총액과 같다.','"00000042000"'],
+      ['h_tot_fare','','특실요금. 일반실이면 0.','"00000018900"'],
+      ['h_tot_dcnt_amt','','할인액(N카드 등). 없으면 0.','"000006600"'],
+      ['h_tot_rcvd_amt','','<b>실제 결제 금액</b> = prc + fare − dcnt. 결제 요청의 hidMnsStlAmt1에 이 값을 넣어야 한다(2026-09-09 실사고: prc를 넣어 WRTV08009 금액오류).','"0000000000054300" → 54300'],
+      ['strResult','','처리 결과.','"SUCC" / "FAIL"'],
+      ['h_msg_cd / h_msg_txt','','오류 코드와 문구.','"ERS700120" / "요청 호차와 객실등급이 불일치 합니다"']]},
+
+{id:'view', kind:'m', t:'예약 재조회', ep:'GET .reservation.ReservationView',
+ note:'korail2가 예약 직후 자동으로 부른다. 예약 응답 객체를 버리고 이 조회 결과로 갈아끼우는 구조라, 결제에 필요한 값들은 앞 단계에서 미리 가로채 둬야 한다.',
+ in:[['Device / Version / Key','필','세션 정보만. 예약번호조차 안 보낸다 — 내 예약 전체를 받아 h_pnr_no로 방금 건을 골라낸다.','"AD" / "250601002" / 세션키']],
+ out:[['jrny_infos.jrny_info[].train_infos.train_info[]','','예약 배열. 아래는 원소 필드.','내 미결제 예약 전부'],
+      ['h_pnr_no','','예약번호. 방금 만든 예약을 이 값으로 찾는다.','"..."'],
+      ['h_tot_seat_cnt','','예약한 좌석 수.','"001"'],
+      ['h_ntisu_lmt_dt / h_ntisu_lmt_tm','','<b>구입 기한</b> 날짜·시각. 이 시각까지 결제하지 않으면 자동 취소된다.','"20260909" / "175500"'],
+      ['h_rsv_amt','','예약 금액.','"00054300"'],
+      ['h_srcar_no / h_seat_no','','<b>실제 배정된 호차·좌석.</b> 좌석 미지정으로 예약했다면 여기서 처음 확인된다.','"0004" / "3A"'],
+      ['h_run_dt','','운행일.','"20260930"']]},
+
+{id:'paykey', kind:'m', t:'간편결제 키 조회', ep:'POST .pay.stlKeyQry.do',
+ note:'코레일 계정에 <b>미리 연결해 둔</b> 간편결제 수단을 가져온다. 토스페이는 이 키가 곧 결제 수단이라 앱에서 따로 입력할 값이 없다 — 대신 코레일 앱에서 최소 1회 토스페이 결제를 해 둬야 키가 생긴다.',
+ in:[['Device / Version / Key','필','세션.','"AD" / "250601002" / 세션키'],
+     ['spayDvCd','필','조회 모드 코드.','"12"']],
+ out:[['spayList[]','','등록된 간편결제 수단 배열. 비어 있으면 등록 안 된 상태.','0~n개'],
+      ['spayDvCd','','간편결제 수단 종류.','"13" = 토스페이'],
+      ['spayStlKeyVal','','<b>결제 키.</b> 결제 요청에 "Y" + 이 값 형태로 실린다.','키 문자열']]},
+
+{id:'pay', kind:'m', t:'결제', ep:'POST .payment.ReservationPayment',
+ note:'예약 응답에서 가로챈 값 4개(h_pnr_no · h_wct_no · h_tmp_job_sqno1 · h_tmp_job_sqno2)와 금액이 그대로 들어간다. 성공 판정은 응답 본문에 "정상발매"·"정상발권"이 있거나 strResult가 SUCC인지로 한다.',
+ in:[['Device / Version / Key','필','세션.','"AD" / "250601002" / 세션키'],
+     ['hidPnrNo','필','예약번호. 예약 응답의 h_pnr_no.','"..."'],
+     ['hidWctNo','필','발권 창구 번호. 예약 응답의 h_wct_no.','"..."'],
+     ['hidTmpJobSqno1 / hidTmpJobSqno2','필','임시 작업 일련번호. 예약 응답 값.','"..."'],
+     ['hidMnsStlAmt1','필','<b>결제 금액.</b> 예약 응답의 <b>h_tot_rcvd_amt</b>(실수령액). h_tot_prc(운임)를 넣으면 특실·할인 예약에서 WRTV08009 "금액오류".','"54300"'],
+     ['hidInrecmnsGridcnt','필','결제 수단 개수. 앱은 항상 1개로 전액 결제.','"1"'],
+     ['hidStlMnsSqno1','필','결제 수단 순번.','"1"'],
+     ['hiduserYn','필','회원 결제 여부.','"Y"']],
+ addLabel:'결제 수단별 파라미터 — 둘 중 한 벌만 보낸다',
+ add:[['[토스] hidStlMnsCd1','조','결제 수단 코드. 14 = 간편결제.','"14"'],
+      ['[토스] hidCrdInpWayCd1','조','입력 방식. D = 간편결제 키.','"D"'],
+      ['[토스] stSpayGridcnt_1','조','간편결제 항목 수.','"1"'],
+      ['[토스] spayDvCd_1_1','조','간편결제 종류. 토스페이.','"13"'],
+      ['[토스] spayCphdDatVal_1_1','조','앞 단계에서 받은 결제 키에 "Y"를 붙인 값.','"Y" + 결제키'],
+      ['[카드] hidStlMnsCd1','조','결제 수단 코드. 02 = 신용카드.','"02"'],
+      ['[카드] hidCrdInpWayCd1','조','입력 방식. @ = 카드번호 직접 입력.','"@"'],
+      ['[카드] hidStlCrCrdNo1','조','카드번호(숫자만).','"1234567812345678"'],
+      ['[카드] hidCrdVlidTrm1','조','유효기간 YYMM.','"2812"'],
+      ['[카드] hidVanPwd1','조','카드 비밀번호 <b>앞 2자리</b>.','"12"'],
+      ['[카드] hidAthnDvCd1','조','인증 구분. 개인이면 생년월일, 법인이면 사업자번호.','"J" 개인 · "S" 법인'],
+      ['[카드] hidAthnVal1','조','인증 값. 개인 생년월일 6자리 또는 사업자번호 10자리.','"900101"'],
+      ['[카드] hidIsmtMnthNum1','조','할부 개월. 0 = 일시불. 5만원 미만은 할부 불가.','"0"']],
+ out:[['(본문) "정상발매" / "정상발권"','','성공 판정 문자열. 응답 형식이 일정하지 않아 본문 문자열로도 판정한다.','포함되면 성공'],
+      ['strResult','','처리 결과.','"SUCC"'],
+      ['h_msg_txt','','실패 사유.','"금액오류" · "카드 승인 거절" 등']]},
+];
+
+const CASES = [
+ {id:'none', name:'좌석 미지정',
+  desc:'<b>가장 짧은 경로.</b> 호차·좌석맵을 아예 보지 않고 예약만 던진다. 자리는 코레일이 알아서 배정하고, 무슨 자리를 받았는지는 ⑨ 예약 재조회에서 처음 확인된다. 호출이 적어 가장 빠르다.',
+  use:['code','login','sched','rsv','view'],
+  marks:{rsv:'txtSrcarCnt="0" · 호차·좌석 파라미터를 붙이지 않는다'}},
+ {id:'pref', name:'자동 선택 (선호 조건)',
+  desc:'창측·순방향 같은 <b>조건</b>만 정해두고 앱이 그때그때 자리를 고른다. 호차 목록에서 잔여석이 인원수 이상인 호차를 추려, <b>목록에 나온 순서대로 최대 6개</b>까지 좌석맵을 떠서 점수가 가장 높은 자리를 지정 예약한다. 만점 자리를 만나면 그 자리에서 멈춘다. 지정 예약이 실패하면 좌석 없이 한 번 더 호출해 아무 자리나 잡는다(로그의 "아무 좌석으로 폴백").',
+  use:['code','login','sched','cls','cars','map','pick','rsv','view'],
+  marks:{map:'호차마다 1회 — 최대 6회 (만점 자리 찾으면 조기 종료)', rsv:'txtSrcarNo / txtSeatNo 포함'}},
+ {id:'cand', name:'후보 좌석 (등록해 둔 자리)',
+  desc:'설정에 등록한 <b>1~10순위 좌석</b>만 확인한다. 볼 호차가 이미 정해져 있어 호차 목록을 생략하고 좌석맵으로 바로 간다. 후보가 인원수만큼 안 비었으면 설정에 따라 ①조건 자동 선택으로 폴백하거나 ②이번 사이클을 건너뛰고 계속 감시한다.',
+  use:['code','login','sched','cls','map','pick','rsv','view'],
+  marks:{map:'후보에 등록된 호차만', pick:'등록 순서가 곧 우선순위', rsv:'txtSrcarNo / txtSeatNo 포함'}},
+ {id:'watch', name:'지정 좌석 감시 (매진 열차)',
+  desc:'매진된 열차의 <b>특정 자리</b>가 풀리기를 기다린다. 잔여석이 0이면 호차 목록 API 자체가 ERI411321로 실패하므로 그 단계를 건너뛰고 좌석맵만 매 사이클 반복한다. 열차가 고정이면 열차 조회(2콜)도 캐시로 대체한다.',
+  use:['code','login','sched','cls','map','rsv','view'],
+  marks:{map:'감시 좌석이 있는 호차만 · 매 사이클 반복', rsv:'인원수만큼 열렸을 때만 호출'}},
+ {id:'wait', name:'예약대기',
+  desc:'좌석이 없고 <b>예약대기</b>가 열린 열차(h_wait_rsv_flg = 9). 자리를 고를 수 없으므로 좌석 API를 전혀 부르지 않는다. N카드 할인도 붙이지 않는다.',
+  use:['code','login','sched','rsv','view'],
+  marks:{rsv:'txtJobId="1102" · 좌석 파라미터 없음 · N카드 미적용'}},
+ {id:'stand', name:'입석',
+  desc:'좌석도 예약대기도 없을 때. korail2가 지원하지 않아 앱이 예약 payload를 <b>직접 구성</b>한다. 입석은 등급 개념이 없어 txtPsrmClCd1을 1로 고정한다.',
+  use:['code','login','sched','rsv','view'],
+  marks:{rsv:'txtStndFlg="Y" · txtPsrmClCd1="1" 고정 · 좌석 파라미터 없음'}},
+ {id:'pay', name:'예약 후 결제',
+  desc:'위 어느 경로로든 예약이 성공한 뒤 이어지는 구간. 예약 응답에서 가로챈 <b>h_wct_no · h_tmp_job_sqno1/2 · h_tot_prc</b>가 그대로 결제 요청에 실린다. 신용카드는 키 조회 없이 결제 1콜로 끝난다.',
+  use:['rsv','paykey','pay'],
+  marks:{rsv:'앞 단계에서 이미 성공한 상태', paykey:'토스페이일 때만 — 카드 결제는 생략'}},
+];
+
+const SHORT = {code:'암호화키', login:'로그인', sched:'열차조회', cls:'등급결정', cars:'호차목록',
+  map:'좌석맵', pick:'좌석선택', rsv:'예약', view:'예약재조회', paykey:'간편결제키', pay:'결제'};
+const RQ = {'필':['q','필수'],'선':['o','선택'],'조':['c','조건부']};
+function fields(rows, cond){
+  return rows.map(function(r){
+    var rq = RQ[r[1]] || null;
+    return '<div class="f"><div class="fh"><code>' + r[0] + '</code>' +
+      (rq ? '<span class="rq ' + rq[0] + '">' + rq[1] + '</span>' : '') + '</div>' +
+      '<div class="fd">' + r[2] + '</div>' +
+      (r[3] ? '<div class="fx">예) <s>' + r[3] + '</s></div>' : '') + '</div>';
+  }).join('');
+}
+function sec(cls, title, rows){
+  return '<div class="sec ' + cls + '"><h3>' + title + '</h3><div>' + fields(rows) + '</div></div>';
+}
+function render(c){
+  document.getElementById('intro').innerHTML = c.desc;
+  // 케이스 매트릭스
+  var mx = '<table class="mx"><tr><th>케이스</th>' +
+    S.map(function(s, i){ return '<th>' + (i + 1) + '. ' + (SHORT[s.id] || s.t) + '</th>'; }).join('') + '</tr>' +
+    CASES.map(function(x){
+      return '<tr class="' + (x.id === c.id ? 'on' : '') + '"><td>' + x.name + '</td>' +
+        S.map(function(s){ return x.use.indexOf(s.id) >= 0 ? '<td class="y">●</td>' : '<td class="n">·</td>'; }).join('') +
+        '</tr>';
+    }).join('') + '</table>';
+  document.getElementById('mx').innerHTML = mx;
+
+  var out = [];
+  S.forEach(function(s, i){
+    if (i) out.push('<div class="arrow">↓</div>');
+    var used = c.use.indexOf(s.id) >= 0;
+    var mark = (c.marks || {})[s.id];
+    var kindTag = s.kind === 'm' ? '<span class="tag t-m">모바일 API</span>'
+                : s.kind === 'w' ? '<span class="tag t-w">웹 API</span>'
+                : '<span class="tag t-l">앱 내부</span>';
+    var body = '';
+    body += sec('in', '보내는 값', s.in);
+    if (s.add)   body += sec('cond', s.addLabel || '조건부 추가', s.add);
+    if (s.ncard) body += sec('cond', s.ncardLabel || '조건부 추가', s.ncard);
+    body += sec('out', '돌려받는 값', s.out);
+    out.push('<div class="card step' + (used ? '' : ' off') + '">' +
+      '<div class="hd"><div class="no ' + (s.kind === 'w' ? 'w' : s.kind === 'l' ? 'l' : '') + '">' + (i + 1) + '</div>' +
+      '<div class="ttl">' + s.t + '</div>' +
+      (s.dyna ? '<span class="tag t-dyna">Dynapath</span>' : '') + kindTag + '</div>' +
+      '<div class="ep">' + s.ep + '</div>' +
+      (used ? '' : '<p class="note skip">이 케이스(' + c.name + ')에서는 호출하지 않는다.</p>') +
+      (mark ? '<p class="note"><b>이 케이스</b> — ' + mark + '</p>' : '') +
+      '<p class="note">' + s.note + '</p>' +
+      (s.warn ? '<p class="note warn">⚠ ' + s.warn + '</p>' : '') +
+      (s.hit ? '<p class="note hit">✖ ' + s.hit + '</p>' : '') +
+      body + '</div>');
+  });
+  document.getElementById('flow').innerHTML = out.join('');
+}
+var bar = document.getElementById('cases');
+CASES.forEach(function(c, i){
+  var b = document.createElement('button');
+  b.className = 'case' + (i ? '' : ' on'); b.textContent = c.name;
+  b.onclick = function(){
+    [].forEach.call(bar.children, function(x){ x.classList.remove('on'); });
+    b.classList.add('on'); render(c); window.scrollTo(0, 0);
+  };
+  bar.appendChild(b);
+});
+render(CASES[0]);
+</script></body></html>
